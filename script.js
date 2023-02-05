@@ -12,6 +12,9 @@ const multiply = (a, b) => {
 };
 
 const divide = (a, b) => {
+    if (b == 0) {
+        return 'Impossible!'
+    }
     return a / b;
 };
 
@@ -44,14 +47,13 @@ const calculate = (string) => {
             value += arr[i];
         }
     };
-    console.log(operator);
     return operate(operator, parseInt(first), parseInt(value));
 };
 
 //Display functions
 const result_display = document.getElementById('result');
 const stored_display = document.getElementById('stored');
-let result = 0
+let result = ''
 
 const buttons = document.querySelectorAll('button');
 buttons.forEach(button => {
@@ -61,7 +63,13 @@ buttons.forEach(button => {
                 stored_display.innerText += button.innerText;
             };
             if (button.classList.contains('op')) {
-                stored_display.innerText += button.innerText;
+                if (!stored_display.innerText.match(/\+|-|x|\//)) {
+                    stored_display.innerText += button.innerText;
+                } else if (stored_display.innerText.match(/^\d+(\+|-|x|\/)\d+$/)) {
+                    result = calculate(stored_display.innerText).toString();
+                    result_display.innerText = '';
+                    stored_display.innerText = result + button.innerText;
+                }
             };
         }
         if (button.classList.contains('del')) {
@@ -70,6 +78,7 @@ buttons.forEach(button => {
         if (button.classList.contains('clear')) {
             result_display.innerText = '';
             stored_display.innerText = '';
+            result = ''
         };
         if (button.classList.contains('equal')) {
             if (stored_display.innerText.match(/^\d+(\+|-|x|\/)\d+$/)) {
