@@ -39,7 +39,7 @@ const buttons = document.querySelectorAll('button');
 buttons.forEach(button => {
     button.addEventListener('click', event => {
         if (button.classList.contains('op') || button.classList.contains('equal')) {
-            if (active_display.innerText != null) {
+            if (active_display.innerText.length != 0) {
                 stored_value.push(parseInt(active_display.innerText));
                 stored_value.push(button.innerText);
                 stored_display.innerText = stored_value.join(' ');
