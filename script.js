@@ -31,31 +31,28 @@ const operate = (operator, a, b) => {
 };
 
 //Display functions
-const active_display = document.getElementById('active');
+const result_display = document.getElementById('result');
 const stored_display = document.getElementById('stored');
-let stored_value = [];
 
 const buttons = document.querySelectorAll('button');
 buttons.forEach(button => {
     button.addEventListener('click', event => {
-        if (button.classList.contains('op') || button.classList.contains('equal')) {
-            if (active_display.innerText.length != 0) {
-                stored_value.push(parseInt(active_display.innerText));
-                stored_value.push(button.innerText);
-                stored_display.innerText = stored_value.join(' ');
-                active_display.innerText = ''
-            };
-        } else if (button.classList.contains('del')) {
-            active_display.innerText = active_display.innerText.slice(0, -1);
-        } else if (button.classList.contains('clear')) {
-            active_display.innerText = '';
-            stored_display.innerText = '';
-            stored_value = [];
-        } else {
-            active_display.innerText += button.innerText;
-
+        if (button.classList.contains('num')) {
+            stored_display.innerText += button.innerText
         };
-        console.log(stored_value);
+        if (button.classList.contains('op')) {
+            stored_display.innerText += button.innerText
+        };
+        if (button.classList.contains('del')) {
+            stored_display.innerText = stored_display.innerText.slice(0, -1);
+        };
+        if (button.classList.contains('clear')) {
+            result_display.innerText = '';
+            stored_display.innerText = '';
+        };
+        if (button.classList.contains('equal')) {
+
+        }
 
     });
 });
