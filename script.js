@@ -39,7 +39,7 @@ const calculate = (string) => {
     let first = '';
     let value = '';
     for (let i = 0; i < arr.length; i++) {
-        if (arr[i].match(/\+|-|x|\//)) {
+        if (arr[i].match(/\+|-|x|\//g)) {
             operator = arr[i];
             first = value;
             value = '';
@@ -47,50 +47,79 @@ const calculate = (string) => {
             value += arr[i];
         }
     };
+    if (arr.includes('.')) {
+        return operate(operator, parseFloat(first), parseFloat(value));
+    }
     return operate(operator, parseInt(first), parseInt(value));
 };
 
+//Rounding Function
+
+const round_num = (num) => {
+    return Math.round(num * 1000) / 1000
+};
+
 //Display functions
-const result_display = document.getElementById('result');
+const active_display = document.getElementById('active');
 const stored_display = document.getElementById('stored');
-let result = ''
+let result = '';
+
+
 
 const buttons = document.querySelectorAll('button');
 buttons.forEach(button => {
     button.addEventListener('click', event => {
-        if (stored_display.innerText.length < 10) {
+        if (active_display.innerText.length < 10) {
             if (button.classList.contains('num')) {
-                stored_display.innerText += button.innerText;
+                active_display.innerText += button.innerText;
             };
-            if (button.classList.contains('op')) {
-                if (!stored_display.innerText.match(/\+|-|x|\//)) {
-                    stored_display.innerText += button.innerText;
-                } else if (stored_display.innerText.match(/^\d+(\+|-|x|\/)\d+$/)) {
-                    result = calculate(stored_display.innerText).toString();
-                    result_display.innerText = '';
-                    stored_display.innerText = result + button.innerText;
+        };
+        if (button.classList.contains('op')) {
+            if (active_display.innerText.length != 0) {
+                if (stored_display.innerText.length != 0) {
+                    if (stored_display.innerText.includes('=')) {
+                        stored_display.innerText = active_display.innerText + button.innerText;
+                    } else {
+                        result = stored_display.innerText + active_display.innerText;
+                        result = calculate(result);
+                        stored_display.innerText = round_num(result) + button.innerText;
+                    }
+
+                } else {
+                    stored_display.innerText = active_display.innerText + button.innerText;
+
+                };
+                active_display.innerText = '';
+            };
+        };
+
+        if (button.classList.contains('dot')) {
+            if (!active_display.innerText.includes('.')) {
+                if (active_display.innerText.length == 0) {
+                    active_display.innerText += 0;
                 }
-            };
-        }
+                active_display.innerText += button.innerText;
+            }
+        };
         if (button.classList.contains('del')) {
-            stored_display.innerText = stored_display.innerText.slice(0, -1);
+            active_display.innerText = active_display.innerText.slice(0, -1);
         };
         if (button.classList.contains('clear')) {
-            result_display.innerText = '';
+            active_display.innerText = '';
             stored_display.innerText = '';
             result = ''
         };
         if (button.classList.contains('equal')) {
-            if (stored_display.innerText.match(/^\d+(\+|-|x|\/)\d+$/)) {
-                result_display.innerText = '';
-                result = calculate(stored_display.innerText).toString();
-                if (result.length > 15) {
-                    result = result.slice(0, 15);
-                }
-                result_display.innerText += result;
+            if (active_display.innerText.length != 0 && stored_display.innerText.length != 0) {
+                result = stored_display.innerText + active_display.innerText;
+                stored_display.innerText = result + button.innerText;
+                active_display.innerText = round_num(calculate(result));
             }
-        }
+        };
+
+    })
+})
 
 
-    });
-});
+
+
